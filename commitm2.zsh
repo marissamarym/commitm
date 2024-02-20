@@ -1,5 +1,15 @@
 #!/bin/zsh
 
+show_help() {
+    echo "Usage: commitm [OPTIONS]"
+    echo ""
+    echo "Generate commit messages with AI."
+    echo ""
+    echo "Options:"
+    echo "  -e, --execute      Execute the git commit with the generated message."
+    echo "  -h, --help         Show this help message."
+}
+
 commitm() {
     local system_prompt="Based on these changes, suggest a good commit message, \
         without any quotations around it or a period at the end. \
@@ -17,6 +27,12 @@ commitm() {
     # Check for the execute flag (-e or --execute)
     if [[ "$1" == "--execute" ]] || [[ "$1" == "-e" ]]; then
         execute_commit=true
+    fi
+
+    # Check for the help flag
+    if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+        show_help
+        return 0
     fi
 
     cleanup() {
