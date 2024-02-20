@@ -185,8 +185,6 @@ commitm() {
                 echo "Commit aborted by user."
                 break
             fi
-
-
             break
         elif [[ "$user_decision" =~ ^[lsdgc]$ ]]; then
             modify_prompt "$user_decision"
