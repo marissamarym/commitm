@@ -170,7 +170,7 @@ commitm() {
         elif [[ "$user_decision" == "c" ]]; then
             is_bot_generated=false
             # Add user input as commit message
-            echo "Enter your custom commit message:"
+            echo "Enter your custom commit message:\n"
             read custom_commit_message
             echo "$custom_commit_message" > "$commit_message_temp_file"
 
@@ -185,6 +185,8 @@ commitm() {
                 echo "Commit aborted by user."
                 break
             fi
+
+
             break
         elif [[ "$user_decision" =~ ^[lsdgc]$ ]]; then
             modify_prompt "$user_decision"
