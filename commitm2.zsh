@@ -63,7 +63,7 @@ commitm() {
             l) 
                 if [[ $length_level -ge 2 ]]; then
                     echo "Commit message cannot be longer."
-                    return 1
+                    break
                 fi
                 length_level=$((length_level+1))
                 prompt_modification="longer than $commit_message_length characters"
@@ -71,7 +71,7 @@ commitm() {
             s) 
                 if [[ $length_level -le -2 ]]; then
                     echo "Commit message cannot be shorter."
-                    return 1
+                    break
                 fi
                 length_level=$((length_level-1))
                 prompt_modification="shorter than $commit_message_length characters"
@@ -117,6 +117,11 @@ commitm() {
     commit_message=$(cat "$commit_message_temp_file")
     echo -e "Generated commit message: \e[1m\e[34m$commit_message\e[0m\n"
 
+    # commit immediately if the execute flag is set
+    if [[ "$execute_commit" == true ]]; then
+        make_commit
+        return 0
+    fi
 
     # Main loop for user decisions
     while true; do
