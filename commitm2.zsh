@@ -2,7 +2,7 @@
 
 
 commitm() {
-    local system_prompt='Based on these changes, suggest a concise commit message, without any quotations around it. It should not have any filler words or flowery/corporate language. It should be '
+    local system_prompt='Based on these changes, suggest a concise commit message, without any quotations around it. A + indicates lines that were added, and a - indicates lines that were deleted. It should not have any filler words or flowery/corporate language. It should be '
     local prompt_modification='less than 5 words'
     local execute_commit=false
     local git_output_temp_file=$(mktemp)
@@ -95,7 +95,7 @@ commitm() {
         local user_prompt="$git_changes_formatted"
         
         # Process git commit dry-run output with llm, including the system prompt for better context.
-        if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream > "$commit_message_temp_file"; then
+        if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream -m gpt-4-turbo > "$commit_message_temp_file"; then
             echo "Error calling llm. Ensure llm is configured correctly and you have an active internet connection." >&2
             cleanup
             return 1
