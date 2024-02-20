@@ -72,22 +72,24 @@ commitm() {
         echo "Modified commit message: \e[1m\e[34m$(cat "$commit_message_temp_file")\e[0m"
     }
 
-    # Generate commit message with initial prompt
     generate_commit_message() {
         # Read the content of the git output temp file
         local git_changes=$(cat "$git_output_temp_file")
         
-        # Prepare the prompt with modifications and git changes
-        local full_prompt="$system_prompt$prompt_modification:\n\nGit changes: \n\`\`\`\n$git_changes\n\`\`\`"
+        # Prepare the system prompt with modifications and git changes
+        local system_prompt_mod="$system_prompt$prompt_modification"
+        local git_changes_formatted="Git changes:\n\`\`\`\n$git_changes\n\`\`\`"
+
+        # Combine the system prompt and the git changes for llm's input
+        local full_prompt="$system_prompt_mod: $git_changes_formatted"
         
         # Process git commit dry-run output with llm, including the system prompt for better context.
-        if ! echo "$full_prompt" | llm --no-stream > "$commit_message_temp_file"; then
+        if ! echo "$full_prompt" | llm -s "$system_prompt_mod" --no-stream > "$commit_message_temp_file"; then
             echo "Error calling llm. Ensure llm is configured correctly and you have an active internet connection." >&2
             cleanup
             return 1
         fi
     }
-
 
     generate_commit_message
 
