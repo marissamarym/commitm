@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-
 commitm() {
     local system_prompt="Based on these changes, suggest a good commit message, \
         without any quotations around it or a period at the end. \
