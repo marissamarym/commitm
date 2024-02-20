@@ -122,7 +122,7 @@ commitm() {
         local user_prompt="$git_changes_formatted"
         
         # Process git commit dry-run output with llm, including the system prompt for better context.
-        if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream -m gpt-4-turbo > "$commit_message_temp_file"; then
+        if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream > "$commit_message_temp_file"; then
             echo "Error calling llm. Ensure llm is configured correctly and you have an active internet connection." >&2
             cleanup
             return 1
