@@ -1,3 +1,6 @@
+#!/bin/zsh
+
+
 commitm() {
     local system_prompt='Based on these changes, suggest a concise commit message, ideally less than 5 words:'
     local execute_commit=false
@@ -68,3 +71,5 @@ commitm() {
     # Perform cleanup
     cleanup
 }
+
+commitm
