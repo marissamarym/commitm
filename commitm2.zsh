@@ -157,11 +157,9 @@ commitm() {
             if [[ "$user_decision" =~ ^[Yy]$ ]]; then
                 make_commit
                 break
-            elif [[ "$user_decision" == "n" ]]; then
+            else
                 echo "Commit aborted by user."
                 break
-            else
-                echo "Invalid option. Please enter y or n."
             fi
 
 
