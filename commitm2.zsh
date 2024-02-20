@@ -125,7 +125,19 @@ commitm() {
 
     # Main loop for user decisions
     while true; do
+
+
+    # explain options, yes, no, longer, shorter, detailed, general, custom
+
         echo -e "Do you want to commit with this message? (y/n/l/s/d/g/c)"
+        echo -e "y: yes"
+        echo -e "n: no"
+        echo -e "l: longer"
+        echo -e "s: shorter"
+        echo -e "d: more detailed"
+        echo -e "g: more general"
+        echo -e "c: custom"
+
         read user_decision
 
         if [[ "$user_decision" =~ ^[Yy]$ ]]; then
