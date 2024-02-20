@@ -2,7 +2,7 @@
 
 
 commitm() {
-    local system_prompt='Based on these changes, suggest a concise commit message that is '
+    local system_prompt='Based on these changes, suggest a concise commit message, without any quotations around it, that is '
     local prompt_modification='less than 5 words'
     local execute_commit=false
     local git_output_temp_file=$(mktemp)
