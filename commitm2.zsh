@@ -15,7 +15,7 @@ commitm() {
     local length_level=0
     local is_bot_generated=true
     
-    # Check for the execute flag (-e)
+    # Check for the execute flag (-e or --execute)
     if [[ "$1" == "--execute" ]] || [[ "$1" == "-e" ]]; then
         execute_commit=true
     fi
@@ -116,9 +116,6 @@ commitm() {
 
     commit_message=$(cat "$commit_message_temp_file")
     echo -e "Generated commit message: \e[1m\e[36m$commit_message\e[0m\n"
-
-    # echo execute_commit
-    echo $execute_commit
 
     # commit immediately if the execute flag is set
     if [[ "$execute_commit" == true ]]; then
