@@ -78,18 +78,18 @@ commitm() {
             l) 
                 if [[ $length_level -ge 1 ]]; then
                     echo "Commit message cannot be longer."
-                    break
+                else
+                    length_level=$((length_level+1))
+                    prompt_modification="longer than $commit_message_length characters"
                 fi
-                length_level=$((length_level+1))
-                prompt_modification="longer than $commit_message_length characters"
                 ;;
             s) 
                 if [[ $length_level -le -1 ]]; then
                     echo "Commit message cannot be shorter."
-                    break
+                else
+                    length_level=$((length_level-1))
+                    prompt_modification="shorter than $commit_message_length characters"
                 fi
-                length_level=$((length_level-1))
-                prompt_modification="shorter than $commit_message_length characters"
                 ;;
             d) prompt_modification="more detailed and specific in regards to the contents of the lines changed than $commit_message";;
             g) prompt_modification="more general than $commit_message";;
@@ -97,7 +97,16 @@ commitm() {
         esac
 
         generate_commit_message
-        echo "Modified commit message: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m"
+
+        local prompt_mod_description=''
+        case $1 in
+            l) prompt_mod_description="Longer";;
+            s) prompt_mod_description="Shorter";;
+            d) prompt_mod_description="More detailed";;
+            g) prompt_mod_description="More general";;
+        esac
+
+        echo -e "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
     }
 
     generate_commit_message() {
