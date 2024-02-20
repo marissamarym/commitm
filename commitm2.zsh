@@ -2,7 +2,7 @@
 
 
 commitm() {
-    local system_prompt='Based on these changes, suggest a concise commit message, without any quotations around it. It should not have any filler words or flowery/corporate language. It should be '
+    local system_prompt='Based on these changes, suggest a good commit message, without any quotations around it or a period at the end. Keep it concise and to the point. Avoid filler words or flowery/corporate language like "refine". It should be '
     local prompt_modification='less than 5 words'
     local execute_commit=false
     local git_output_temp_file=$(mktemp)
@@ -73,7 +73,7 @@ commitm() {
                 length_level=$((length_level-1))
                 prompt_modification="shorter than $commit_message_length characters"
                 ;;
-            d) prompt_modification="more detailed and specific than $commit_message";;
+            d) prompt_modification="more detailed and specific in regards to the contents of the lines changed than $commit_message";;
             g) prompt_modification="more general than $commit_message";;
             *) echo "Invalid option"; return 1;;
         esac
