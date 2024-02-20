@@ -82,7 +82,7 @@ commitm() {
         esac
 
         generate_commit_message
-        echo "Modified commit message: \e[1m\e[34m$(cat "$commit_message_temp_file")\e[0m"
+        echo "Modified commit message: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m"
     }
 
     generate_commit_message() {
@@ -115,7 +115,7 @@ commitm() {
     fi
 
     commit_message=$(cat "$commit_message_temp_file")
-    echo -e "Generated commit message: \e[1m\e[34m$commit_message\e[0m\n"
+    echo -e "Generated commit message: \e[1m\e[36m$commit_message\e[0m\n"
 
     # commit immediately if the execute flag is set
     if [[ "$execute_commit" == true ]]; then
@@ -125,18 +125,15 @@ commitm() {
 
     # Main loop for user decisions
     while true; do
-
-
-    # explain options, yes, no, longer, shorter, detailed, general, custom
-
-        echo -e "Do you want to commit with this message? (y/n/l/s/d/g/c)"
-        echo -e "y: yes"
-        echo -e "n: no"
-        echo -e "l: longer"
-        echo -e "s: shorter"
-        echo -e "d: more detailed"
-        echo -e "g: more general"
-        echo -e "c: custom"
+        # Explain options, yes, no, longer, shorter, detailed, general, custom
+        echo -e "Do you want to commit with this message? (\e[32my\e[0m/\e[31mn\e[0m/\e[33ml\e[0m/\e[33ms\e[0m/\e[33md\e[0m/\e[33mg\e[0m/\e[33mc\e[0m)"
+        echo -e "\e[32my\e[0m: yes"
+        echo -e "\e[31mn\e[0m: no"
+        echo -e "\e[33ml\e[0m: longer"
+        echo -e "\e[33ms\e[0m: shorter"
+        echo -e "\e[33md\e[0m: more detailed"
+        echo -e "\e[33mg\e[0m: more general"
+        echo -e "\e[33mc\e[0m: custom"
 
         read user_decision
 
@@ -153,7 +150,7 @@ commitm() {
             read custom_commit_message
             echo "$custom_commit_message" > "$commit_message_temp_file"
 
-            echo -e "Your commit message: \e[1m\e[34m$custom_commit_message\e[0m\n"
+            echo -e "Your commit message: \e[1m\e[36m$custom_commit_message\e[0m\n"
             echo -e "Do you want to commit with this message? (y/n)"
 
             read user_decision
