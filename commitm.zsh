@@ -76,7 +76,7 @@ commitm() {
         commit_message_length=${#commit_message}
         case $1 in
             l) 
-                if [[ $length_level -ge 2 ]]; then
+                if [[ $length_level -ge 1 ]]; then
                     echo "Commit message cannot be longer."
                     break
                 fi
@@ -84,7 +84,7 @@ commitm() {
                 prompt_modification="longer than $commit_message_length characters"
                 ;;
             s) 
-                if [[ $length_level -le -2 ]]; then
+                if [[ $length_level -le -1 ]]; then
                     echo "Commit message cannot be shorter."
                     break
                 fi
