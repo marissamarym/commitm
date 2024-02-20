@@ -18,7 +18,6 @@ commitm() {
     # Check for the execute flag (-e)
     if [[ "$1" == "--execute" ]] || [[ "$1" == "-e" ]]; then
         execute_commit=true
-        return 0
     fi
 
     cleanup() {
@@ -118,6 +117,9 @@ commitm() {
     commit_message=$(cat "$commit_message_temp_file")
     echo -e "Generated commit message: \e[1m\e[36m$commit_message\e[0m\n"
 
+    # echo execute_commit
+    echo $execute_commit
+
     # commit immediately if the execute flag is set
     if [[ "$execute_commit" == true ]]; then
         make_commit
@@ -176,4 +178,4 @@ commitm() {
     cleanup
 }
 
-commitm
+commitm "$@"
