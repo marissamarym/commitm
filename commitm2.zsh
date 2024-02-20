@@ -2,7 +2,7 @@
 
 
 commitm() {
-    local system_prompt='Based on these changes, suggest a good commit message, without any quotations around it or a period at the end. Keep it concise and to the point. Avoid filler words or flowery/corporate language like "refine". It should be '
+    local system_prompt="Based on these changes, suggest a good commit message, without any quotations around it or a period at the end. Keep it concise and to the point. Avoid filler words or flowery/corporate language like 'refine'. It should be "
     local prompt_modification='less than 5 words'
     local execute_commit=false
     local git_output_temp_file=$(mktemp)
@@ -155,16 +155,6 @@ commitm() {
             echo "Invalid option. Please enter y, n, l, s, d, g, or c."
         fi
     done
-    
-    # if [[ "$execute_commit" == true ]]; then
-    #     # Execute the git commit command with the generated message if the execute flag is set
-    #     git commit -m "$commit_message"
-    # else
-    #     # Output the commit message and copy command to clipboard
-    #     local commit_command="git commit -m '$commit_message'"
-    #     echo "$commit_command" | pbcopy
-    #     echo "The commit command has been copied to your clipboard. You can paste it into your terminal to commit."
-    # fi
     
     # Perform cleanup
     cleanup
