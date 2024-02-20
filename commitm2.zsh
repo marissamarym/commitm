@@ -18,6 +18,7 @@ commitm() {
     # Check for the execute flag (-e)
     if [[ "$1" == "--execute" ]] || [[ "$1" == "-e" ]]; then
         execute_commit=true
+        return 0
     fi
 
     cleanup() {
@@ -145,7 +146,7 @@ commitm() {
             break
         elif [[ "$user_decision" == "c" ]]; then
             is_bot_generated=false
-            # add user input as commit message
+            # Add user input as commit message
             echo "Enter your custom commit message:"
             read custom_commit_message
             echo "$custom_commit_message" > "$commit_message_temp_file"
