@@ -126,14 +126,14 @@ commitm() {
     # Main loop for user decisions
     while true; do
         # Explain options, yes, no, longer, shorter, detailed, general, custom
-        echo -e "Do you want to commit with this message? (\e[32my\e[0m/\e[31mn\e[0m/\e[33ml\e[0m/\e[33ms\e[0m/\e[33md\e[0m/\e[33mg\e[0m/\e[33mc\e[0m)"
+        echo -e "Do you want to commit with this message? (\e[32my\e[0m/\e[31mn\e[0m/l/s/d/g/c)"
         echo -e "\e[32my\e[0m: yes"
         echo -e "\e[31mn\e[0m: no"
-        echo -e "\e[33ml\e[0m: longer"
-        echo -e "\e[33ms\e[0m: shorter"
-        echo -e "\e[33md\e[0m: more detailed"
-        echo -e "\e[33mg\e[0m: more general"
-        echo -e "\e[33mc\e[0m: custom"
+        echo -e "l: longer"
+        echo -e "s: shorter"
+        echo -e "d: more detailed"
+        echo -e "g: more general"
+        echo -e "c: custom"
 
         read user_decision
 
