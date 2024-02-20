@@ -10,6 +10,7 @@ commitm() {
     local commit_message=''
     local cleaned_up=false # Flag to indicate whether cleanup has been run
     local length_level=0
+    local is_bot_generated=true
     
     # Check for the execute flag (-e)
     if [[ "$1" == "--execute" ]] || [[ "$1" == "-e" ]]; then
@@ -43,6 +44,15 @@ commitm() {
         return 1
     fi
 
+
+    make_commit() {
+        if [[ "$is_bot_generated" == true ]]; then
+            git commit -m "🤖 $(cat "$commit_message_temp_file")"
+        else
+            git commit -m "$(cat "$commit_message_temp_file")"
+        fi
+    }
+
     # Function to handle user input for modifying the commit message prompt
     modify_prompt() {
         commit_message_length=${#commit_message}
@@ -73,6 +83,7 @@ commitm() {
     }
 
     generate_commit_message() {
+        is_bot_generated=true
         # Read the content of the git output temp file
         local git_changes=$(cat "$git_output_temp_file")
         
@@ -110,23 +121,24 @@ commitm() {
         read user_decision
 
         if [[ "$user_decision" =~ ^[Yy]$ ]]; then
-            git commit -m "$(cat "$commit_message_temp_file")"
+            make_commit
             break
         elif [[ "$user_decision" == "n" ]]; then
             echo "Commit aborted by user."
             break
         elif [[ "$user_decision" == "c" ]]; then
+            is_bot_generated=false
             # add user input as commit message
             echo "Enter your custom commit message:"
             read custom_commit_message
             echo "$custom_commit_message" > "$commit_message_temp_file"
 
-            echo -e "Generated commit message: \e[1m\e[34m$custom_commit_message\e[0m\n"
+            echo -e "Your commit message: \e[1m\e[34m$custom_commit_message\e[0m\n"
             echo -e "Do you want to commit with this message? (y/n)"
 
             read user_decision
             if [[ "$user_decision" =~ ^[Yy]$ ]]; then
-                git commit -m "$(cat "$commit_message_temp_file")"
+                make_commit
                 break
             elif [[ "$user_decision" == "n" ]]; then
                 echo "Commit aborted by user."
