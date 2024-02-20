@@ -2,7 +2,7 @@
 
 
 commitm() {
-    local system_prompt='Based on these changes, suggest a concise commit message, without any quotations around it. It should not have any filler words or flowery/corporate language. It should be '
+    local system_prompt='Based on these changes, suggest a concise commit message, without any quotations around it. It should not have any filler words or flowery/corporate language. Consider not just the literal changes, but why those changes were made. Do not guess if you do not know why those changes were made. It should be '
     local prompt_modification='less than 5 words'
     local execute_commit=false
     local git_output_temp_file=$(mktemp)
@@ -47,9 +47,9 @@ commitm() {
 
     make_commit() {
         if [[ "$is_bot_generated" == true ]]; then
-            git commit -m "🤖 $(cat "$commit_message_temp_file")"
+            git commit -m "$(printf '🤖 %s' "$(cat "$commit_message_temp_file")")"
         else
-            git commit -m "$(cat "$commit_message_temp_file")"
+            git commit -m "$(printf '%s' "$(cat "$commit_message_temp_file")")"
         fi
     }
 
