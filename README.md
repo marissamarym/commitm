@@ -2,7 +2,8 @@
 
 Use the `commitm` command to generate commit messages, modify them, and commit!
 
-<img width="1114" alt="Screenshot 2024-02-20 at 4 29 37 PM" src="https://github.com/marissamarym/commitm/assets/1459660/a839c133-4160-4999-91c0-4babf8d0ae11">
+![CleanShot 2024-02-21 at 16 16 50@2x](https://github.com/marissamarym/commitm/assets/1459660/b1a3b0b5-7728-415b-8a17-28d72291ec60)
+
 
 Inspired by [my brother Adam's AI Shell Command Generator](https://gist.github.com/montasaurus/5ccbe453ef863f702291e763b1b63daf) ([tweet](https://twitter.com/montasaurus_rex/status/1758506549478097383)).
 
