@@ -6,9 +6,11 @@ Use the `commitm` command to generate commit messages, modify them, and commit!
 
 Inspired by [my brother Adam's AI Shell Command Generator](https://gist.github.com/montasaurus/5ccbe453ef863f702291e763b1b63daf) ([tweet](https://twitter.com/montasaurus_rex/status/1758506549478097383)).
 
+The `commitm` command:
+
 - Runs `git commit --dry-run -v` to get a summary of your staged changes.
 - Prompts `llm` to generate a commit message.
-- Asks if you want to commit the message or modify it (make it shorter, longer, more detailed, or more general).
+- Asks if you want to commit the message, modify it (make it shorter, longer, more detailed, or more general), or enter a custom message.
 
 ## Getting Started
 
