@@ -32,9 +32,9 @@ To make the script easily accessible from anywhere, add the following alias to y
 echo 'alias commitm="$HOME/path/to/commitm/src/commitm.zsh"' >> ~/.zshrc
 ```
 
-Replace $HOME/path/to/commitm with the actual path to where you cloned or placed commitm.
+Replace `$HOME/path/to/commitm` with the actual path to where you cloned or placed `commitm`.
 
-Apply the changes to your .zshrc by running:
+Apply the changes to your `.zshrc` by running:
 
 ```bash
 source ~/.zshrc
