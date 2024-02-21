@@ -1,4 +1,4 @@
-# AI Git Commit Message Generator using [llm](https://llm.datasette.io/en/stable/)
+# AI Git Commit Message Generator
 
 Use the `commitm` command to generate commit messages, modify them, and commit!
 
