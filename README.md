@@ -1,5 +1,7 @@
 # AI Git Commit Message Generator using [llm](https://llm.datasette.io/en/stable/)
 
+Use the `commitm` command to generate commit messages, modify them, and commit!
+
 Inspired by [my brother Adam's AI Shell Command Generator](https://gist.github.com/montasaurus/5ccbe453ef863f702291e763b1b63daf) ([tweet](https://twitter.com/montasaurus_rex/status/1758506549478097383)).
 
 - Runs `git commit --dry-run -v` to get a summary of your staged changes.
