@@ -15,12 +15,12 @@ commitm() {
         without any quotations around it or a period at the end. \
         Keep it concise and to the point. \
         Avoid filler words or flowery/corporate language like 'refine'. It should be "
-    local prompt_modification='less than 5 words'
+    local prompt_mod='less than 5 words'
     local execute_commit=false
     local git_output_temp_file=$(mktemp)
     local commit_message_temp_file=$(mktemp)
     local commit_message=''
-    local cleaned_up=false # Flag to indicate whether cleanup has been run
+    local cleaned_up=false
     local length_level=0
     local is_bot_generated=true
     
@@ -34,6 +34,74 @@ commitm() {
         show_help
         return 0
     fi
+
+        # Execute the commit with the commit message
+    make_commit() {
+        if [[ "$is_bot_generated" == true ]]; then
+            git commit -m "$(printf '🤖 %s' "$(cat "$commit_message_temp_file")")"
+        else
+            git commit -m "$(printf '%s' "$(cat "$commit_message_temp_file")")"
+        fi
+    }
+
+    # Handle user input for modifying the commit message prompt
+    modify_prompt() {
+        commit_message_length=${#commit_message}
+        case $1 in
+            l) 
+                if [[ $length_level -ge 1 ]]; then
+                    echo "Commit message cannot be longer."
+                else
+                    length_level=$((length_level+1))
+                    prompt_mod="longer than $commit_message_length characters"
+                fi
+                ;;
+            s) 
+                if [[ $length_level -le -1 ]]; then
+                    echo "Commit message cannot be shorter."
+                else
+                    length_level=$((length_level-1))
+                    prompt_mod="shorter than $commit_message_length characters"
+                fi
+                ;;
+            d) prompt_mod="more detailed and specific in regards to the contents of the lines changed than $commit_message";;
+            g) prompt_mod="more general than $commit_message";;
+            *) echo "Invalid option"; return 1;;
+        esac
+
+        generate_commit_message
+
+        local prompt_mod_description=''
+        case $1 in
+            l) prompt_mod_description="Longer";;
+            s) prompt_mod_description="Shorter";;
+            d) prompt_mod_description="More detailed";;
+            g) prompt_mod_description="More general";;
+        esac
+
+        echo -e "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
+    }
+
+    # Generate the commit message with llm
+    generate_commit_message() {
+        is_bot_generated=true
+        # Read the content of the git output temp file
+        local git_changes=$(cat "$git_output_temp_file")
+        
+        # Prepare the system prompt with modifications and git changes
+        local full_system_prompt="$system_prompt$prompt_mod"
+        local git_changes_formatted="$git_changes"
+
+        # Combine the system prompt and the git changes for llm's input
+        local user_prompt="$git_changes_formatted"
+        
+        # Process git commit dry-run output with llm, including the system prompt for better context.
+        if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream > "$commit_message_temp_file"; then
+            echo "Error calling llm. Ensure llm is configured correctly and you have an active internet connection." >&2
+            cleanup
+            return 1
+        fi
+    }
 
     cleanup() {
         # Only run cleanup if it hasn't been done yet
@@ -62,73 +130,6 @@ commitm() {
         return 1
     fi
 
-
-    make_commit() {
-        if [[ "$is_bot_generated" == true ]]; then
-            git commit -m "$(printf '🤖 %s' "$(cat "$commit_message_temp_file")")"
-        else
-            git commit -m "$(printf '%s' "$(cat "$commit_message_temp_file")")"
-        fi
-    }
-
-    # Function to handle user input for modifying the commit message prompt
-    modify_prompt() {
-        commit_message_length=${#commit_message}
-        case $1 in
-            l) 
-                if [[ $length_level -ge 1 ]]; then
-                    echo "Commit message cannot be longer."
-                else
-                    length_level=$((length_level+1))
-                    prompt_modification="longer than $commit_message_length characters"
-                fi
-                ;;
-            s) 
-                if [[ $length_level -le -1 ]]; then
-                    echo "Commit message cannot be shorter."
-                else
-                    length_level=$((length_level-1))
-                    prompt_modification="shorter than $commit_message_length characters"
-                fi
-                ;;
-            d) prompt_modification="more detailed and specific in regards to the contents of the lines changed than $commit_message";;
-            g) prompt_modification="more general than $commit_message";;
-            *) echo "Invalid option"; return 1;;
-        esac
-
-        generate_commit_message
-
-        local prompt_mod_description=''
-        case $1 in
-            l) prompt_mod_description="Longer";;
-            s) prompt_mod_description="Shorter";;
-            d) prompt_mod_description="More detailed";;
-            g) prompt_mod_description="More general";;
-        esac
-
-        echo -e "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
-    }
-
-    generate_commit_message() {
-        is_bot_generated=true
-        # Read the content of the git output temp file
-        local git_changes=$(cat "$git_output_temp_file")
-        
-        # Prepare the system prompt with modifications and git changes
-        local full_system_prompt="$system_prompt$prompt_modification"
-        local git_changes_formatted="$git_changes"
-
-        # Combine the system prompt and the git changes for llm's input
-        local user_prompt="$git_changes_formatted"
-        
-        # Process git commit dry-run output with llm, including the system prompt for better context.
-        if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream > "$commit_message_temp_file"; then
-            echo "Error calling llm. Ensure llm is configured correctly and you have an active internet connection." >&2
-            cleanup
-            return 1
-        fi
-    }
-
     generate_commit_message
 
     # Check if the commit message was generated
@@ -141,7 +142,7 @@ commitm() {
     commit_message=$(cat "$commit_message_temp_file")
     echo -e "Generated commit message: \e[1m\e[36m$commit_message\e[0m\n"
 
-    # commit immediately if the execute flag is set
+    # Commit immediately if the execute flag is set
     if [[ "$execute_commit" == true ]]; then
         make_commit
         return 0
@@ -149,7 +150,7 @@ commitm() {
 
     # Main loop for user decisions
     while true; do
-        # Explain options, yes, no, longer, shorter, detailed, general, custom
+        # Explain options: yes, no, longer, shorter, detailed, general, custom
         echo -e "Do you want to commit with this message? (\e[32my\e[0m/\e[31mn\e[0m/l/s/d/g/c)"
         echo -e "\e[32my\e[0m: yes"
         echo -e "\e[31mn\e[0m: no"
