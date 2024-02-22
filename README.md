@@ -10,7 +10,7 @@ Inspired by [my brother Adam's AI Shell Command Generator](https://gist.github.c
 
 - Generates commit messages using the `llm` CLI based on staged changes
 - Allows modifying messages to be more general, specific, longer, shorter etc
-- Commits generated messages or custom messages
+- Commits generated messages (with the prefix 🤖) or custom messages
 
 ## Getting Started
 
@@ -72,6 +72,12 @@ To generate a commit message and commit it immediately:
 
 ```bash
 commitm -e
+```
+
+To generate a commit message with a custom prefix (default is 🤖):
+
+```bash
+commitm -p ✨
 ```
 
 ## Contributing

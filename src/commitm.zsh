@@ -8,6 +8,7 @@ show_help() {
     echo "Options:"
     echo "  -e, --execute      Execute the git commit with the generated message."
     echo "  -h, --help         Show this help message."
+    echo "  -p, --prefix       Change the prefix of the generated message from the default of 🤖."
 }
 
 commitm() {
