@@ -10,6 +10,11 @@ show_help() {
     echo "  -h, --help         Show this help message."
     echo "  -p, --prefix       Change the prefix of the generated message from the default of 🤖."
     echo "  -np, --no-prefix   Clear the prefix for the generated message."
+    echo "  -v                 Show the current version."
+}
+
+show_version() {
+    echo "commitm v1.0.3"
 }
 
 show_error() {
@@ -66,6 +71,9 @@ commitm() {
             execute_commit=true
         elif [[ "$arg" == "--help" ]] || [[ "$arg" == "-h" ]]; then
             show_help
+            return 0
+        elif [[ "$arg" == "-v" ]]; then
+            show_version
             return 0
         elif [[ "$arg" == "--no-prefix" ]] || [[ "$arg" == "-np" ]]; then
             use_prefix=false
@@ -131,9 +139,16 @@ commitm() {
 
         # Combine the system prompt and the git changes for llm's input
         local user_prompt="$git_changes_formatted"
+
+        # Use ttok to truncate the input to 4096 tokens (GPT 3.5 turbo max token limit)
+        local max_tokens=4096
+        local token_buffer=10
+        local system_prompt_length=$(echo "$full_system_prompt" | ttok)
+        local user_prompt_allowed_length=$((max_tokens - system_prompt_length - token_buffer))
+        local truncated_user_prompt=$(echo "$user_prompt" | ttok -t $user_prompt_allowed_length)
         
         # Process git commit dry-run output with llm, including the system prompt for better context.
-        if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream > "$commit_message_temp_file"; then
+        if ! echo "$truncated_user_prompt" | llm -s "$full_system_prompt" --no-stream > "$commit_message_temp_file"; then
             show_error "Error calling llm. Ensure llm is configured correctly and you have an active internet connection."
             cleanup
             return 1

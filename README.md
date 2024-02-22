@@ -86,6 +86,10 @@ To generate a commit message without a custom prefix (default is 🤖):
 commitm --no-prefix
 ```
 
+## Caveats
+
+- `commitm` limits the prompt to 4096 tokens.
+
 ## Contributing
 
 Any contributions you make are greatly appreciated.
