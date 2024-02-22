@@ -80,6 +80,12 @@ To generate a commit message with a custom prefix (default is 🤖):
 commitm -p ✨
 ```
 
+To generate a commit message without a custom prefix (default is 🤖):
+
+```bash
+commitm --no-prefix
+```
+
 ## Contributing
 
 Any contributions you make are greatly appreciated.
