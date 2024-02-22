@@ -1,23 +1,22 @@
-# AI Git Commit Message Generator
+# commitm - AI-Generated Git Commit Messages
 
 Use the `commitm` command to generate commit messages, modify them, and commit!
 
-![CleanShot 2024-02-21 at 16 16 50@2x](https://github.com/marissamarym/commitm/assets/1459660/b1a3b0b5-7728-415b-8a17-28d72291ec60)
-
+![CleanShot 2024-02-21 at 16 14 29@2x](https://github.com/marissamarym/homebrew-commitm/assets/1459660/c98e14d5-bbac-4562-9d4e-4e5ed906a800)
 
 Inspired by [my brother Adam's AI Shell Command Generator](https://gist.github.com/montasaurus/5ccbe453ef863f702291e763b1b63daf) ([tweet](https://twitter.com/montasaurus_rex/status/1758506549478097383)).
 
-The `commitm` command:
+## Features
 
-- Runs `git commit --dry-run -v` to get a summary of your staged changes.
-- Prompts `llm` to generate a commit message.
-- Asks if you want to commit the message, modify it (make it shorter, longer, more detailed, or more general), or enter a custom message.
+- Generates commit messages using the `llm` CLI based on staged changes
+- Allows modifying messages to be more general, specific, longer, shorter etc
+- Commits generated messages or custom messages
 
 ## Getting Started
 
 ### Prerequisites
 
-Install and configure the [llm](https://llm.datasette.io/en/stable/#quick-start) CLI tool.
+Install and configure the [llm](https://llm.datasette.io/en/stable/#quick-start) CLI tool. `llm` needs an API key (like the OpenAI API key) to make LLM calls.
 
 ### Installation
 
