@@ -25,10 +25,11 @@ commitm() {
     local length_level=0
     local is_bot_generated=true
 
+    # Parse the command line arguments
     for arg in "$@"; do
         if [[ "$prev_arg" == "--prefix" ]]  || [[ "$prev_arg" == "-p" ]]; then
             prefix="$arg"
-            # Optionally, reset the prefix variable to avoid interpreting the prefix value as another command
+            # Reset the prefix variable to avoid interpreting the prefix value as another command
             prev_arg=""
             continue
         fi
@@ -42,7 +43,7 @@ commitm() {
         fi
     done
 
-        # Execute the commit with the commit message
+    # Execute the commit with the commit message
     make_commit() {
         if [[ "$is_bot_generated" == true ]]; then
             git commit -m "$(printf '%s %s' "$prefix" "$(cat "$commit_message_temp_file")")"
