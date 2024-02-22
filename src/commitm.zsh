@@ -11,34 +11,42 @@ show_help() {
 }
 
 commitm() {
+    local prefix="🤖" # Default prefix
     local system_prompt="Based on these changes, suggest a good commit message, \
         without any quotations around it or a period at the end. \
         Keep it concise and to the point. \
         Avoid filler words or flowery/corporate language like 'refine'. It should be "
-    local prompt_mod='less than 5 words'
+    local prompt_mod="less than 5 words"
     local execute_commit=false
     local git_output_temp_file=$(mktemp)
     local commit_message_temp_file=$(mktemp)
-    local commit_message=''
+    local commit_message=""
     local cleaned_up=false
     local length_level=0
     local is_bot_generated=true
-    
-    # Check for the execute flag (-e or --execute)
-    if [[ "$1" == "--execute" ]] || [[ "$1" == "-e" ]]; then
-        execute_commit=true
-    fi
 
-    # Check for the help flag
-    if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
-        show_help
-        return 0
-    fi
+    for arg in "$@"; do
+        if [[ "$prev_arg" == "--prefix" ]]  || [[ "$arg" == "-p" ]]; then
+            prefix="$arg"
+            # Optionally, reset the prefix variable to avoid interpreting the prefix value as another command
+            prev_arg=""
+            continue
+        fi
+        prev_arg="$arg"
+        
+        if [[ "$arg" == "--execute" ]] || [[ "$arg" == "-e" ]]; then
+            execute_commit=true
+        elif [[ "$arg" == "--help" ]] || [[ "$arg" == "-h" ]]; then
+            show_help
+            return 0
+        fi
+    done
+
 
         # Execute the commit with the commit message
     make_commit() {
         if [[ "$is_bot_generated" == true ]]; then
-            git commit -m "$(printf '🤖 %s' "$(cat "$commit_message_temp_file")")"
+            git commit -m "$(printf '%s %s' "$prefix" "$(cat "$commit_message_temp_file")")"
         else
             git commit -m "$(printf '%s' "$(cat "$commit_message_temp_file")")"
         fi
