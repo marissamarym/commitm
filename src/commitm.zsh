@@ -11,8 +11,14 @@ show_help() {
     echo "  -p, --prefix       Change the prefix of the generated message from the default of 🤖."
 }
 
+# Function to print errors with red text
+show_error() {
+    echo -e "\e[31mError: $1\e[0m" >&2
+}
+
 commitm() {
     local prefix="🤖" # Default prefix
+    local use_prefix=true
     local system_prompt="Based on these changes, suggest a good commit message, \
         without any quotations around it or a period at the end. \
         Keep it concise and to the point. \
@@ -26,11 +32,27 @@ commitm() {
     local length_level=0
     local is_bot_generated=true
 
+    # Command line argument validation
+    local is_prefix_set=false
+    local is_no_prefix_set=false
+    for arg in "$@"; do
+        if [[ "$arg" == "--prefix" ]] || [[ "$arg" == "-p" ]]; then
+            is_prefix_set=true
+        elif [[ "$arg" == "--no-prefix" ]] || [[ "$arg" == "-np" ]]; then
+            is_no_prefix_set=true
+        fi
+    done
+
+    if [[ "$is_prefix_set" == true ]] && [[ "$is_no_prefix_set" == true ]]; then
+        show_error "--prefix and --no-prefix cannot be used together."
+        return 1
+    fi
+
     # Parse the command line arguments
     for arg in "$@"; do
-        if [[ "$prev_arg" == "--prefix" ]]  || [[ "$prev_arg" == "-p" ]]; then
+        if [[ "$prev_arg" == "--prefix" ]] || [[ "$prev_arg" == "-p" ]]; then
             prefix="$arg"
-            # Reset the prefix variable to avoid interpreting the prefix value as another command
+            # Reset prev_arg to avoid misinterpreting the next argument
             prev_arg=""
             continue
         fi
@@ -41,6 +63,8 @@ commitm() {
         elif [[ "$arg" == "--help" ]] || [[ "$arg" == "-h" ]]; then
             show_help
             return 0
+        elif [[ "$arg" == "--no-prefix" ]] || [[ "$arg" == "-np" ]]; then
+            use_prefix=false
         fi
     done
 
@@ -75,7 +99,7 @@ commitm() {
                 ;;
             d) prompt_mod="more detailed and specific in regards to the contents of the lines changed than $commit_message";;
             g) prompt_mod="more general than $commit_message";;
-            *) echo "Invalid option"; return 1;;
+            *) show_error "Invalid option"; return 1;;
         esac
 
         generate_commit_message
@@ -106,7 +130,7 @@ commitm() {
         
         # Process git commit dry-run output with llm, including the system prompt for better context.
         if ! echo "$user_prompt" | llm -s "$full_system_prompt" --no-stream > "$commit_message_temp_file"; then
-            echo "Error calling llm. Ensure llm is configured correctly and you have an active internet connection." >&2
+            show_error "Error calling llm. Ensure llm is configured correctly and you have an active internet connection."
             cleanup
             return 1
         fi
@@ -134,7 +158,7 @@ commitm() {
         # Capture the verbose dry-run output of git commit to a temp file
         git commit --dry-run -v > "$git_output_temp_file" 2>&1
     else
-        echo "No changes staged for commit." >&2
+        show_error "No changes staged for commit."
         cleanup
         return 1
     fi
@@ -143,7 +167,7 @@ commitm() {
 
     # Check if the commit message was generated
     if [[ ! -s "$commit_message_temp_file" ]]; then
-        echo "Failed to generate commit message." >&2
+        show_error "Failed to generate commit message."
         cleanup
         return 1
     fi
