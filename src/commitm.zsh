@@ -11,9 +11,12 @@ show_help() {
     echo "  -p, --prefix       Change the prefix of the generated message from the default of 🤖."
 }
 
-# Function to print errors with red text
 show_error() {
     echo -e "\e[31mError: $1\e[0m" >&2
+}
+
+show_warning() {
+    echo -e "\e[33mWarning: $1\e[0m" >&2
 }
 
 commitm() {
@@ -52,7 +55,7 @@ commitm() {
     for arg in "$@"; do
         if [[ "$prev_arg" == "--prefix" ]] || [[ "$prev_arg" == "-p" ]]; then
             prefix="$arg"
-            # Reset prev_arg to avoid misinterpreting the next argument
+            # Reset prev_arg
             prev_arg=""
             continue
         fi
@@ -158,7 +161,7 @@ commitm() {
         # Capture the verbose dry-run output of git commit to a temp file
         git commit --dry-run -v > "$git_output_temp_file" 2>&1
     else
-        show_error "No changes staged for commit."
+        show_warning "No changes staged for commit."
         cleanup
         return 1
     fi
