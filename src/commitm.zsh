@@ -26,7 +26,7 @@ commitm() {
     local is_bot_generated=true
 
     for arg in "$@"; do
-        if [[ "$prev_arg" == "--prefix" ]]  || [[ "$arg" == "-p" ]]; then
+        if [[ "$prev_arg" == "--prefix" ]]  || [[ "$prev_arg" == "-p" ]]; then
             prefix="$arg"
             # Optionally, reset the prefix variable to avoid interpreting the prefix value as another command
             prev_arg=""
@@ -41,7 +41,6 @@ commitm() {
             return 0
         fi
     done
-
 
         # Execute the commit with the commit message
     make_commit() {
