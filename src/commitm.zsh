@@ -10,8 +10,8 @@ show_help() {
     echo "  -h, --help         Show this help message."
     echo "  -p, --prefix       Change the prefix of the generated message from the default of 🤖."
     echo "  -np, --no-prefix   Clear the prefix for the generated message."
-    echo "  -v                 Show the current version."
     echo "  -q, --quiet        Suppress all output."
+    echo "  -v                 Show the current version."
 }
 
 show_version() {
