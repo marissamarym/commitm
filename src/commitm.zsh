@@ -31,6 +31,7 @@ commitm() {
     local system_prompt="Based on these changes, suggest a good commit message, \
         without any quotations around it or a period at the end. \
         Keep it concise and to the point. \
+        If the diff only changes comments, the commit message should say something to that effect. \
         Avoid filler words or flowery/corporate language like 'refine'. It should be "
     local prompt_mod="less than 5 words"
     local execute_commit=false
@@ -82,7 +83,8 @@ commitm() {
 
     # Execute the commit with the commit message
     make_commit() {
-        if [[ "$is_bot_generated" == true ]]; then
+        local commit_msg_format="%s"
+        if [[ "$is_bot_generated" == true ]] && [[ "$no_prefix" != true ]]; then
             git commit -m "$(printf '%s %s' "$prefix" "$(cat "$commit_message_temp_file")")"
         else
             git commit -m "$(printf '%s' "$(cat "$commit_message_temp_file")")"
@@ -136,6 +138,7 @@ commitm() {
         # Prepare the system prompt with modifications and git changes
         local full_system_prompt="$system_prompt$prompt_mod"
         local git_changes_formatted="$git_changes"
+
 
         # Combine the system prompt and the git changes for llm's input
         local user_prompt="$git_changes_formatted"
