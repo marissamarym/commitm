@@ -14,7 +14,7 @@ show_help() {
 }
 
 show_version() {
-    echo "commitm v1.0.3"
+    echo "commitm v1.0.4"
 }
 
 show_error() {
