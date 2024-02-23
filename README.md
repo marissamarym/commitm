@@ -86,6 +86,12 @@ To generate a commit message without a custom prefix (default is 🤖):
 commitm --no-prefix
 ```
 
+To generate a commit message and commit immediately without showing output:
+
+```bash
+commitm -e -q
+```
+
 ## Caveats
 
 - `commitm` limits the prompt to 4096 tokens.

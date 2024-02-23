@@ -11,6 +11,7 @@ show_help() {
     echo "  -p, --prefix       Change the prefix of the generated message from the default of 🤖."
     echo "  -np, --no-prefix   Clear the prefix for the generated message."
     echo "  -v                 Show the current version."
+    echo "  -q, --quiet        Suppress all output."
 }
 
 show_version() {
@@ -25,9 +26,16 @@ show_warning() {
     echo -e "\e[33mWarning: $1\e[0m" >&2
 }
 
+show_echo() {
+    if [[ "$suppress_output" == false ]]; then
+        echo -e "$1"
+    fi
+}
+
 commitm() {
     local prefix="🤖" # Default prefix
     local use_prefix=true
+    local suppress_output=false
     local system_prompt="Based on these changes, suggest a good commit message, \
         without any quotations around it or a period at the end. \
         Keep it concise and to the point. \
@@ -78,6 +86,8 @@ commitm() {
             return 0
         elif [[ "$arg" == "--no-prefix" ]] || [[ "$arg" == "-np" ]]; then
             use_prefix=false
+        elif [[ "$arg" == "-q" ]] || [[ "$arg" == "--quiet" ]]; then
+            suppress_output=true
         fi
     done
 
@@ -97,7 +107,7 @@ commitm() {
         case $1 in
             l) 
                 if [[ $length_level -ge 1 ]]; then
-                    echo "Commit message cannot be longer."
+                    show_warning "Commit message cannot be longer."
                 else
                     length_level=$((length_level+1))
                     prompt_mod="longer than $commit_message_length characters"
@@ -105,7 +115,7 @@ commitm() {
                 ;;
             s) 
                 if [[ $length_level -le -1 ]]; then
-                    echo "Commit message cannot be shorter."
+                    show_warning "Commit message cannot be shorter."
                 else
                     length_level=$((length_level-1))
                     prompt_mod="shorter than $commit_message_length characters"
@@ -126,7 +136,7 @@ commitm() {
             g) prompt_mod_description="More general";;
         esac
 
-        echo -e "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
+        show_echo -e "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
     }
 
     # Generate the commit message with llm
@@ -195,7 +205,8 @@ commitm() {
     fi
 
     commit_message=$(cat "$commit_message_temp_file")
-    echo -e "Generated commit message: \e[1m\e[36m$commit_message\e[0m\n"
+    
+    show_echo "Generated commit message: \e[1m\e[36m$commit_message\e[0m\n"
 
     # Commit immediately if the execute flag is set
     if [[ "$execute_commit" == true ]]; then
@@ -205,15 +216,19 @@ commitm() {
 
     # Main loop for user decisions
     while true; do
+
+    
+    if [[ "$suppress_output" == false ]]; then
         # Explain options: yes, no, longer, shorter, detailed, general, custom
-        echo -e "Do you want to commit with this message? (\e[32my\e[0m/\e[31mn\e[0m/l/s/d/g/c)"
-        echo -e "\e[32my\e[0m: yes"
-        echo -e "\e[31mn\e[0m: no"
-        echo -e "l: longer"
-        echo -e "s: shorter"
-        echo -e "d: more detailed"
-        echo -e "g: more general"
-        echo -e "c: custom"
+        show_echo "Do you want to commit with this message? (\e[32my\e[0m/\e[31mn\e[0m/l/s/d/g/c)"
+        show_echo "\e[32my\e[0m: yes"
+        show_echo "\e[31mn\e[0m: no"
+        show_echo "l: longer"
+        show_echo "s: shorter"
+        show_echo "d: more detailed"
+        show_echo "g: more general"
+        show_echo "c: custom"
+    fi
 
         read user_decision
 
@@ -221,24 +236,24 @@ commitm() {
             make_commit
             break
         elif [[ "$user_decision" == "n" ]]; then
-            echo "Commit aborted by user."
+            show_echo "Commit aborted by user."
             break
         elif [[ "$user_decision" == "c" ]]; then
             is_bot_generated=false
             # Add user input as commit message
-            echo "Enter your custom commit message:\n"
+            show_echo "Enter your custom commit message:\n"
             read custom_commit_message
-            echo "$custom_commit_message" > "$commit_message_temp_file"
+            show_echo "$custom_commit_message" > "$commit_message_temp_file"
 
-            echo -e "Your commit message: \e[1m\e[36m$custom_commit_message\e[0m\n"
-            echo -e "Do you want to commit with this message? (y/n)"
+            show_echo "Your commit message: \e[1m\e[36m$custom_commit_message\e[0m\n"
+            show_echo "Do you want to commit with this message? (y/n)"
 
             read user_decision
             if [[ "$user_decision" =~ ^[Yy]$ ]]; then
                 make_commit
                 break
             else
-                echo "Commit aborted by user."
+                show_echo "Commit aborted by user."
                 break
             fi
 
@@ -247,7 +262,7 @@ commitm() {
         elif [[ "$user_decision" =~ ^[lsdgc]$ ]]; then
             modify_prompt "$user_decision"
         else
-            echo "Invalid option. Please enter y, n, l, s, d, g, or c."
+            show_echo "Invalid option. Please enter y, n, l, s, d, g, or c."
         fi
     done
     
