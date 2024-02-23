@@ -23,18 +23,6 @@ Install and configure the [llm](https://llm.datasette.io/en/stable/#quick-start)
 #### Option 1: With Homebrew
 
 ```bash
-brew install marissamarym/commitm/commitm
-```
-
-Or
-
-```bash
-brew tap marissamarym/commitm
-```
-
-and then
-
-```bash
 brew install commitm
 ```
 
