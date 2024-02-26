@@ -26,12 +26,6 @@ show_warning() {
     echo -e "\e[33mWarning: $1\e[0m" >&2
 }
 
-show_echo() {
-    if [[ "$suppress_output" == false ]]; then
-        echo -e "$1"
-    fi
-}
-
 commitm() {
     local prefix="🤖" # Default prefix
     local use_prefix=true
@@ -91,6 +85,13 @@ commitm() {
         fi
     done
 
+    show_echo() {
+        if [[ "$suppress_output" == false ]]; then
+            echo -e "$1"
+        fi
+    }
+
+
     # Execute the commit with the commit message
     make_commit() {
         local commit_msg_format="%s"
@@ -136,7 +137,7 @@ commitm() {
             g) prompt_mod_description="More general";;
         esac
 
-        show_echo -e "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
+        show_echo "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
     }
 
     # Generate the commit message with llm

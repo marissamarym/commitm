@@ -74,7 +74,7 @@ To generate a commit message and commit it immediately:
 commitm -e
 ```
 
-To generate a commit message with a custom prefix (default is 🤖):
+To generate a commit message with a custom prefix (✨) (default is 🤖):
 
 ```bash
 commitm -p ✨
