@@ -15,7 +15,7 @@ show_help() {
 }
 
 show_version() {
-    echo "commitm v1.0.7"
+    echo "commitm v1.0.8"
 }
 
 show_error() {
@@ -95,7 +95,7 @@ commitm() {
     # Execute the commit with the commit message
     make_commit() {
         local commit_msg_format="%s"
-        if [[ "$is_bot_generated" == true ]] && [[ "$no_prefix" != true ]]; then
+        if [[ "$is_bot_generated" == true ]] && [[ "$use_prefix" == true ]]; then
             git commit -m "$(printf '%s %s' "$prefix" "$(cat "$commit_message_temp_file")")"
         else
             git commit -m "$(printf '%s' "$(cat "$commit_message_temp_file")")"
