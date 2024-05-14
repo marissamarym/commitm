@@ -12,6 +12,7 @@ show_help() {
     echo "  -np, --no-prefix   Clear the prefix for the generated message."
     echo "  -q, --quiet        Suppress all output."
     echo "  -v                 Show the current version."
+    echo "  -pr, --prompt      Set a custom prompt for the commit message."
 }
 
 show_version() {
@@ -43,6 +44,7 @@ commitm() {
     local cleaned_up=false
     local length_level=0
     local is_bot_generated=true
+    local prompt=""
 
     # Command line argument validation
     local is_prefix_set=false
@@ -64,6 +66,12 @@ commitm() {
     for arg in "$@"; do
         if [[ "$prev_arg" == "--prefix" ]] || [[ "$prev_arg" == "-p" ]]; then
             prefix="$arg"
+            # Reset prev_arg
+            prev_arg=""
+            continue
+        fi
+        if [[ "$prev_arg" == "--prompt" ]] || [[ "$prev_arg" == "-pr" ]]; then
+            prompt="$arg"
             # Reset prev_arg
             prev_arg=""
             continue
@@ -147,7 +155,11 @@ commitm() {
         local git_changes=$(cat "$git_output_temp_file")
         
         # Prepare the system prompt with modifications and git changes
-        local full_system_prompt="$system_prompt$prompt_mod"
+if [[ -n "$prompt" ]]; then
+    local full_system_prompt="$prompt$prompt_mod"
+else
+    local full_system_prompt="$system_prompt$prompt_mod$prompt"
+fi
         local git_changes_formatted="$git_changes"
 
 
