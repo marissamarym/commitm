@@ -18,6 +18,12 @@ Inspired by [my brother Adam's AI Shell Command Generator](https://gist.github.c
 
 Install and configure the [llm](https://llm.datasette.io/en/stable/#quick-start) CLI tool. `llm` needs an API key (like the OpenAI API key) to make LLM calls.
 
+The model `4o` (`GPT-4o`) is recommended. To set this as your default, run:
+
+```bash
+llm models default 4o
+```
+
 ### Installation
 
 #### Option 1: With Homebrew
