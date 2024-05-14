@@ -145,11 +145,7 @@ commitm() {
             g) prompt_mod_description="More general";;
         esac
 
-        if [[ -n "$prompt" ]]; then
-            show_echo "\n$prompt prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
-        else
-            show_echo "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
-        fi
+        show_echo "\n$prompt_mod_description prompt: \e[1m\e[36m$(cat "$commit_message_temp_file")\e[0m\n"
     }
 
     # Generate the commit message with llm
@@ -159,7 +155,7 @@ commitm() {
         local git_changes=$(cat "$git_output_temp_file")
         
         # Prepare the system prompt with modifications and git changes
-        local full_system_prompt="$system_prompt$prompt_mod"
+        local full_system_prompt="$system_prompt$prompt_mod$prompt"
         local git_changes_formatted="$git_changes"
 
 
