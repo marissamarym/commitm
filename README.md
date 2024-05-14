@@ -24,6 +24,8 @@ The model `4o` (`GPT-4o`) is recommended. To set this as your default, run:
 llm models default 4o
 ```
 
+`commitm` will use your default `llm` model.
+
 ### Installation
 
 #### Option 1: With Homebrew
