@@ -155,7 +155,11 @@ commitm() {
         local git_changes=$(cat "$git_output_temp_file")
         
         # Prepare the system prompt with modifications and git changes
-        local full_system_prompt="$system_prompt$prompt_mod$prompt"
+if [[ -n "$prompt" ]]; then
+    local full_system_prompt="$prompt$prompt_mod"
+else
+    local full_system_prompt="$system_prompt$prompt_mod$prompt"
+fi
         local git_changes_formatted="$git_changes"
 
 
